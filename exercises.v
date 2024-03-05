@@ -14,3 +14,13 @@ Import numFieldTopology.Exports.
 Local Open Scope classical_set_scope.
 Local Open Scope ring_scope.
 
+Lemma closed_diag_hausdorff (T : topologicalType) :
+  closed [set (x, x) | x in [set: T]] <-> hausdorff_space T.
+Proof.
+split.
+  move=> + x y xy_close => /(_ (x, y))[]; last by move=> ? _ [<- <-].
+  move=> /= A [[/= A1 A2] [Ax Ay]] A12.
+  have [z [/= A1z A2z]] := xy_close A1 A2 Ax Ay.
+  by exists (z, z); split=> //; apply: A12.
+admit.
+Admitted.

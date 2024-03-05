@@ -11,6 +11,14 @@ Unset Printing Implicit Defensive.
 Import Order.TTheory GRing.Theory Num.Def Num.Theory.
 Import numFieldTopology.Exports.
 
+Lemma square_and_cube_modulo7 (m n p : nat) : m = n ^ 2 -> m = p ^ 3 ->
+  (m == 0 %[mod 7]) || (m == 1 %[mod 7]).
+Proof.
+move=> -> /(congr1 (modn^~ 7)); rewrite -modnXm -[in RHS]modnXm.
+move: (n %% 7) (p %% 7) (@ltn_pmod n 7 isT) (@ltn_pmod p 7 isT).
+by do 7?[case=> //]; do 7?[case=> //].
+Qed.
+
 Local Open Scope classical_set_scope.
 Local Open Scope ring_scope.
 
@@ -22,5 +30,7 @@ split.
   move=> /= A [[/= A1 A2] [Ax Ay]] A12.
   have [z [/= A1z A2z]] := xy_close A1 A2 Ax Ay.
   by exists (z, z); split=> //; apply: A12.
-admit.
-Admitted.
+move=> T_hausdorff [x y] xydiag; rewrite -(T_hausdorff x y)//.
+move=> A B Ax By; have [] := xydiag (A `*` B); first by exists (A, B).
+by move=> [a b] [[_ _ [-> <-]] [/=]]; exists a.
+Qed.

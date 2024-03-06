@@ -34,3 +34,16 @@ move=> T_hausdorff [x y] xydiag; rewrite -(T_hausdorff x y)//.
 move=> A B Ax By; have [] := xydiag (A `*` B); first by exists (A, B).
 by move=> [a b] [[_ _ [-> <-]] [/=]]; exists a.
 Qed.
+
+Lemma closed_graph_function (T U : topologicalType) (f  : T -> U): 
+  hausdorff_space U -> continuous f -> closed [set xy | f(xy.1) = xy.2].
+Proof.
+move=> U_hausdorff f_cont [x y] /= graph; rewrite (U_hausdorff (f x) y) //=.
+move => A B Afx By. have [] := graph ((f @^-1` A)`*`B). 
+ by exists ((f @^-1` A),B); first by split => //=; first by apply: f_cont. 
+by move => [a b] /= [<-] []; exists (f a). 
+Qed. 
+
+(*We can do everything without using limits in here,
+ find another exercise  on normed space which has several solutions?*)
+ 

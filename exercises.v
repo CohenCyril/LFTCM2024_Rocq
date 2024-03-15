@@ -2,7 +2,7 @@ From mathcomp Require Import all_ssreflect ssralg ssrint ssrnum finmap matrix.
 From mathcomp Require Import rat interval zmodp vector fieldext falgebra.
 From mathcomp Require Import mathcomp_extra boolp classical_sets functions.
 From mathcomp Require Import cardinality set_interval Rstruct.
-From mathcomp Require Import ereal reals signed topology prodnormedzmodule.
+From mathcomp Require Import ereal reals signed topology prodnormedzmodule normedtype.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
@@ -46,4 +46,45 @@ Qed.
 
 (*We can do everything without using limits in here,
  find another exercise  on normed space which has several solutions?*)
+
+
+ Lemma continuous_linear_bounded (R : numFieldType) (V W : normedModType R) (x : V) 
+  (f : {linear V -> W}) :
+  {for 0, continuous f} -> bounded_near f (nbhs 0).
+ Proof.  
+rewrite /prop_for /(_ @ _) /bounded_near //=. 
+(*You will witness the notation F --> x where F is a filter. 
+This is a notation for (nbhs x) `<=` F,
+the canonical filter of neighborhoods of x is included in F  *)
+rewrite linear0 => f0.
+(* The notation "\near" is used in mathcomp-analysis
+to represent filter inclusion:
+  \forall x \near F, P x <-> F (fun x => P x). 
+A whole set of tactics and lemmas are available to reason with near.
+ For now, you can get back to filter reasoning with near E*)
+rewrite nearE //=  /+oo. 
+move: (f0 (ball 0 1)).
+move => /(_ (nbhsx_ballx 0 1 ltr01)) //= /nbhs_norm0P [] /= M M0 H.
+exists M; split. 
+ by rewrite realE; apply/orP; left; rewrite le0r; apply/orP;right. 
+move => r Mr; apply/nbhs_norm0P=>/=.
+have r0 : 0 <r by apply: lt_trans; first by apply: M0.
+exists (M * r) => //=; first by apply: mulr_gt0; rewrite // invr_gt0.
+move => z /= zMr.
+have -> : z = r*:(r^-1*:z). 
+  rewrite scalerA mulrV //=. admit. rewrite unitf_gt0 //. (* 1*:_ = _*)
+rewrite linearE normrZ gtr0_norm // ger_pMr //. 
+move: (H (r^-1 *: z)) => //=; rewrite -ball_normE /= normrZ.
+rewrite mulrC. (*`|r| = r if 0 <r ? *)
+Admitted.
+
+ Lemma with_near (R : numFieldType) (V W : normedModType R) (x : V) 
+  (f : {linear V -> W}) :
+  {for 0, continuous f} -> bounded_near f (nbhs x).
+ Proof.  
+ rewrite /prop_for linear0 /bounded_near => f0.
+near=> M; apply/nbhs0P.
+ near do rewrite /= linearD (le_trans (ler_normD _ _))// -lerBrDl.
+by apply: cvgr0_norm_le; rewrite // subr_gt0.
+Unshelve. all: by end_near. Qed.
  

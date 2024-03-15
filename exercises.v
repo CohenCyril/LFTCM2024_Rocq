@@ -72,11 +72,17 @@ have r0 : 0 <r by apply: lt_trans; first by apply: M0.
 exists (M * r) => //=; first by apply: mulr_gt0; rewrite // invr_gt0.
 move => z /= zMr.
 have -> : z = r*:(r^-1*:z). 
-  rewrite scalerA mulrV //=. admit. rewrite unitf_gt0 //. (* 1*:_ = _*)
+  rewrite scalerA mulrV //= ?scale1r ?unitf_gt0 //.
 rewrite linearE normrZ gtr0_norm // ger_pMr //. 
-move: (H (r^-1 *: z)) => //=; rewrite -ball_normE /= normrZ.
-rewrite mulrC. (*`|r| = r if 0 <r ? *)
-Admitted.
+move: (H (r^-1 *: z)) => //=; rewrite -ball_normE /= normrZ. 
+rewrite mulrC  -[X in (`|X| <1)]opprB normrE subr0.
+rewrite -ltr_pdivlMr normrV ?invr_gt0 ?normr_gt0.
+have -> :`|r| =r  by rewrite gtr0_norm. 
+rewrite invrK => /(_ zMr) H0; rewrite le_eqVlt;apply/orP; right => //.
+by apply: unitf_gt0.
+by apply: lt0r_neq0. 
+by apply: unitf_gt0.
+Qed.
 
  Lemma with_near (R : numFieldType) (V W : normedModType R) (x : V) 
   (f : {linear V -> W}) :

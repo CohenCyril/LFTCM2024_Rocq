@@ -44,8 +44,6 @@ move => A B Afx By. have [] := graph ((f @^-1` A)`*`B).
 by move => [a b] /= [<-] []; exists (f a). 
 Qed. 
 
-(*We can do everything without using limits in here, find another exercise  on
- normed space which has several solutions?*)
 
 
  Lemma continuous_linear_bounded (R : numFieldType) (V W : normedModType R) (x : V) 

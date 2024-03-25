@@ -41,7 +41,8 @@
 
     ## You can override Coq and other Coq coqPackages
     ## through the following attribute
-    # coqPackages.coq.override.version = "8.11";
+    coqPackages.coq.override.version = "8.19";
+    coqPackages.mathcomp.override.version = "2.2.0";
 
     ## In some cases, light overrides are not available/enough
     ## in which case you can use either

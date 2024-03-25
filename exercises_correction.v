@@ -46,11 +46,11 @@ Qed.
 
 
 
- Lemma continuous_linear_bounded (R : numFieldType) (V W : normedModType R) (x : V) 
-  (f : {linear V -> W}) :
+Lemma continuous_linear_bounded (R : numFieldType) (V W : normedModType R)
+    (x : V) (f : {linear V -> W}) :
   {for 0, continuous f} -> bounded_near f (nbhs 0).
- Proof.  
-rewrite /prop_for /(_ @ _) /bounded_near //=. 
+Proof.
+rewrite /prop_for /continuous_at /(_ @ _) /bounded_near //=.
 (*You will witness the notation F --> x where F is a filter. 
 This is a notation for (nbhs x) `<=` F,
 the canonical filter of neighborhoods of x is included in F  *)
@@ -82,11 +82,11 @@ by apply: lt0r_neq0.
 by apply: unitf_gt0.
 Qed.
 
- Lemma with_near (R : numFieldType) (V W : normedModType R) (x : V) 
-  (f : {linear V -> W}) :
+Lemma with_near (R : numFieldType) (V W : normedModType R)
+    (x : V) (f : {linear V -> W}) :
   {for 0, continuous f} -> bounded_near f (nbhs x).
- Proof.  
- rewrite /prop_for linear0 /bounded_near => f0.
+Proof.
+rewrite /prop_for /continuous_at linear0 /bounded_near => f0.
 near=> M; apply/nbhs0P.
  near do rewrite /= linearD (le_trans (ler_normD _ _))// -lerBrDl.
 by apply: cvgr0_norm_le; rewrite // subr_gt0.

@@ -91,11 +91,11 @@ Check scale1r.
 (*Here's a set of lemmas that might be useful. *)
 (* TODO *)
 (*TODO : find a simpler proof without orP *)
- Lemma continuous_linear_bounded (R : realFieldType) (V W : normedModType R) (x : V) 
-  (f : {linear V -> W}) :
+Lemma continuous_linear_bounded (R : realFieldType) (V W : normedModType R)
+    (x : V) (f : {linear V -> W}) :
   {for 0, continuous f} -> bounded_near f (nbhs 0).
- Proof.  
-rewrite /prop_for /(_ @ _) /bounded_near //=. 
+Proof.
+rewrite /prop_for /continuous_at /(_ @ _) /bounded_near //= /=.
 rewrite linear0 => f0.
 rewrite nearE //=  /+oo. 
 move: (f0 (ball 0 1)) => /(_ (nbhsx_ballx 0 1 ltr01)) //=.
@@ -118,11 +118,11 @@ by apply: lt0r_neq0.
 by apply: unitf_gt0.
 Qed.
 
- Lemma with_near (R : numFieldType) (V W : normedModType R) (x : V) 
-  (f : {linear V -> W}) :
+Lemma with_near (R : numFieldType) (V W : normedModType R)
+    (x : V) (f : {linear V -> W}) :
   {for 0, continuous f} -> bounded_near f (nbhs x).
- Proof.  
- rewrite /prop_for linear0 /bounded_near => f0.
+Proof.
+rewrite /prop_for /continuous_at linear0 /bounded_near => f0.
 near=> M; apply/nbhs0P.
  near do rewrite /= linearD (le_trans (ler_normD _ _))// -lerBrDl.
 by apply: cvgr0_norm_le; rewrite // subr_gt0.

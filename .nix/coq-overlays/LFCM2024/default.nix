@@ -7,6 +7,7 @@
 { lib, mkCoqDerivation, which, coq
   ## declare extra dependencies here, to be used in propagateBuildInputs e.g.
   , mathcomp, mathcomp-classical, mathcomp-analysis
+  , mathcomp-algebra-tactics
   , coq-elpi, hierarchy-builder
   , version ? null }:
 
@@ -40,6 +41,7 @@ with lib; mkCoqDerivation {
   ## - OCaml packages (use `coq.ocamlPackages.xxx`, no need to require them at the beginning of the file)
   propagatedBuildInputs = [
     mathcomp mathcomp-classical mathcomp-analysis
+    mathcomp-algebra-tactics
     coq-elpi hierarchy-builder ]; ## e.g. `= [ mathcomp coq-elpi ]`
 
   ## Does the package contain OCaml code?

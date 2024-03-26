@@ -8,7 +8,7 @@ Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 
-(*This sheets feature one exercice on basic number theory, two exercises on
+(* This sheets feature one exercice on basic number theory, two exercises on
  basic topology, and one exercice on boundedness in normed spaces *)
 
 Import Order.TTheory GRing.Theory Num.Def Num.Theory.
@@ -17,13 +17,21 @@ Import numFieldTopology.Exports.
 Lemma square_and_cube_modulo7 (m n p : nat) : m = n ^ 2 -> m = p ^ 3 ->
   (m == 0 %[mod 7]) || (m == 1 %[mod 7]).
 Proof.
-(*Cyril, what indication do you want to put*)
+(* Proof suggestion *)
+(* 1. first subsitute the first equality inside the rest and get rid of m *)
+(*    see rewrite or intro patterns (after the move=>) *)
+(* 2. the push the modulo "to the leaves" / "inside" *)
+(*    Hint: *) Search modn expn.
+(* 3. Generalize using the fact that a modulo 7 is smaller than 7 *)
+(*    Hint: *) Search leq modn in div.
+(* 4. Perform 7 case analysis for each modulo 7 *)
+(*    Use repeated case or repeated [] inside move=> *)
 Admitted.
 
 Local Open Scope classical_set_scope.
 Local Open Scope ring_scope.
 
-(*Remember our basic sets of tactics: 
+(* Remember our basic sets of tactics: 
 - "move => H" and "move: H" to put an hypothesis from the goal to context, and
   vice-versa. To break H, use move => [A B]
 - The signs // /= can be use to refer to an hypothesis in the context and to

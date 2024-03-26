@@ -1,3 +1,4 @@
+Require Import Rdefinitions.
 From mathcomp Require Import all_ssreflect ssralg ssrint ssrnum finmap matrix.
 From mathcomp Require Import rat interval zmodp vector fieldext falgebra.
 From mathcomp Require Import mathcomp_extra boolp classical_sets functions.
@@ -8,7 +9,7 @@ Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 
-Import Order.TTheory GRing.Theory Num.Def Num.Theory.
+Import Order.TTheory GRing.Theory Num.Theory.
 Import numFieldTopology.Exports.
 
 (*Demo File for the 9:00 - 10:15 lesson :Coq/Rocq Tutorial: ssreflect tactics
@@ -55,8 +56,8 @@ Lemma div1 : forall (n : nat), 6 %| n  -> 2*3 %| n .
 Proof. 
 move=> n n6.
 have H : 2*3 = 6. move => //=.
-move => {H} (*let's forget about H to prove H in another way*)
 have H : 2*3 = 6 by []. (*evenx quicker*)
+move=> {H}. (* let's forget about H to prove H in another way *)
 rewrite H.
 move => //.
 Admitted.
@@ -236,15 +237,37 @@ Qed.
 Lemma EM_bool (b1 b2 : bool) : b1 || ~~ b1.
 Proof. by case: b1. Qed.
  
-Require Import Rdefinitions.
-From mathcomp Require Import Rstruct.
-
+From mathcomp Require Import intdiv Rstruct reals exp.
+Local Open Scope nat_scope.
+Local Open Scope ring_scope.
 Notation sqrt := Num.sqrt.
+Notation rational := (range (@ratr R)).
+Notation irrational := [predC rational].
 
-Theorem using_EM : sqrt 2 \notin range (@ratr R).
+Theorem sqrt2_irrational : sqrt 2 \in irrational.
 Proof.
-apply/negP; rewrite inE /=; case=> x _.
+apply/negP; rewrite inE /=; case=> x _; case: (ratP x) => p q _.
+rewrite rmorphM fmorphV/= !ratr_int.
+move=> /(congr1 (fun x : R => (x ^+ 2))).
+rewrite sqr_sqrtr// exprMn exprVn -!rmorphXn/= => /(canRL (mulfVK _)).
+rewrite pnatr_eq0 => /(_ isT); rewrite -rmorphM/=; apply/eqP.
+suff : (`|p|%N ^ 2 != 2 * q.+1 ^ 2)%N.
+  apply: contra_neq => ?; apply: (mulrIn (@oner_neq0 R)).
+  by rewrite -abszX natr_absz ger0_norm ?sqr_ge0.
+apply/eqP => /(congr1 (odd \o logn 2))/=.
+by rewrite lognM// !lognX/= !oddM/=.
+Qed.
 
+(* Fun *) Fact exists_rat_pow_of_irrat : exists a b : R,
+  [&& a \in irrational, b \in irrational & a `^ b \in rational].
+Proof.
+pose x : R := sqrt 2; pose y := x `^ x.
+have [yrat|/negP yNrat] := EM (y \in rational).
+  by exists x, x; rewrite sqrt2_irrational.
+exists y, x; rewrite [y \in _]yNrat sqrt2_irrational/=.
+rewrite -powRrM -expr2 sqr_sqrtr// powR_mulrn// ?sqrtr_ge0//.
+by rewrite sqr_sqrtr// inE/=; exists 2 => //=; rewrite ratr_nat.
+Qed.
 
 (* suff, wlog *)
 

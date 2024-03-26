@@ -16,16 +16,32 @@ and the MathComp library *)
 
 (* Feel free to play with file while I'm talking !*)
 
-(*SSreflect / Lean cheat sheet *)
+(* Dictionnary *)
+(* SSreflect /  Approximate Lean *)
+
+(* move=>    | rintros *)
+(* move:     | revert *)
+(* rewrite   | rw     *)
+(*           | simp   *)
+(* rewrite / | disimp *)
+(* apply:    | apply  *)
+(*   ;       | < ; >  *)
+(*   ; first |    ;   *)
+(* /=        |        *)
+(*  //       |         *)
+
+(* Invariants between Lean and Ssreflect *)
+(*  left right exists split |   *)
+
+
 
 (** MOVES **)
-
 
 
 Lemma divand : forall (m n : nat), 2 %| n /\  3 %| m -> 6 %| n * m .
 Proof. 
 move=> m n. move=> H.
-move: H. move=>[A B].
+move:H. move => [A B].
 Admitted.
 
 Lemma divor : forall (m n : nat), 2 %| n \/  3 %| m -> 6 %| n * m .
@@ -59,12 +75,12 @@ Admitted.
 (** Rewrites **)
 
 (*As is Lean, one can rewrite thanks to an equality, going forward or backward*)
-Lemma rewrite1 (n m : nat) : n = m -> 1 + n = 1+ m.
+Lemma rewrite1 (n m : nat) : n = m -> 1 + n = 1 + m.
 Proof.
 move => H. rewrite H. by [].  (* n is replaced by m*)
 Qed.
 
-Lemma rewrite_1 (n m : nat) : n = m -> 1 + n = 1+ m.
+Lemma rewrite_1 (n m : nat) : n = m -> 1 + n = 1 + m.
 Proof.
 move => H. rewrite -H. by []. (* now m is replaced by n*) 
 Qed.
@@ -95,14 +111,14 @@ by move =>  ->.
 Qed.
 
 (* And it works backward also "<-" *)
-Lemma rewrite_directly_backward (n m : nat) : n = m -> 1 + n = 1+ m.
+Lemma rewrite_directly_backward (n m : nat) : n = m -> 1 + n = 1 + m.
 Proof.
 by move =>  <-.  
 Qed.
 
 (* Sometimes we want to chain several lemmas, and we can*)
 
-Lemma rewrite_a_lot (n m p q: nat) : n = m -> q=p -> p + n = q+ m.
+Lemma rewrite_a_lot (n m p q: nat) : n = m -> q = p -> p + n = q + m.
 Proof.
 by move =>  -> ->.  
 Qed.
@@ -113,7 +129,7 @@ explicitely name the lemma, but for maintenance purpose you might not want to*)
 Local Open Scope ring_scope. 
 
 Lemma subterm_selection  (R : ringType) (p q : R) :
-  (p + q +1 )*q = q * (q + p) +q.
+  (p + q + 1 )*q = q * (q + p) + q.
 Proof.
 rewrite addrC.
 rewrite (addrC q).
@@ -131,10 +147,10 @@ Proof.
 move=> r0.
 rewrite /(_*:_). (*we might now want to do that, let's wrap it again*)
 rewrite -/(_*:_). (*and again*)
-rewrite -/(_*:_). 
-(*we could just have written :rewrite -/!(_*:_).*)
+rewrite -!/(_*:_). 
+(*we could just have written :rewrite -!/(_*:_).*)
 (* But now we know how this is called "scale". It is likely to be present in the
-lemmas on that *)
+lemmas on that notion *)
  Search "scale" (_*:_). Search (_*:(_*:_)).
 rewrite scalerA. 
 Search (_/_ = 1).
@@ -147,10 +163,18 @@ subgoals before concluding with //*)
 (*by move=> r0; rewrite scalerA mulfV ?scale1r.*)
 Qed.
 
+Lemma divand_full : forall (m n : nat), 2 %| n /\  3 %| m -> 6 %| n * m .
+Proof. 
+move=> m n. move=> [dvd2n dvd3n].
+rewrite (@Gauss_dvd 2 3)//.
+by rewrite dvdn_mulr// dvdn_mull.
+Qed.
+
+
 (** Search **)
 
 Search 
-(*smaybe ome words I may want to find in the name of the lemma*) "mul" "spring"
+(*smaybe ome words I may want to find in the name of the lemma*) "mul" 
 (*then maybe a list of patterns I want to find*)(_*_) (2 + _ = 1 +_)
 (* then maybe a library I want to specifically look in*) in topology.
 
@@ -211,12 +235,15 @@ Qed.
 
 Lemma EM_bool (b1 b2 : bool) : b1 || ~~ b1.
 Proof. by case: b1. Qed.
+ 
+Require Import Rdefinitions.
+From mathcomp Require Import Rstruct.
 
-Lemma using_EM  (n: nat): n=n.
+Notation sqrt := Num.sqrt.
+
+Theorem using_EM : sqrt 2 \notin range (@ratr R).
 Proof.
-Check EM.
-case: (EM (n = 0)).
-Abort.
+apply/negP; rewrite inE /=; case=> x _.
 
 
 (* suff, wlog *)

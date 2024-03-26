@@ -69,8 +69,8 @@ move => r Mr; apply/nbhs_norm0P=>/=.
 have r0 : 0 <r by apply: lt_trans; first by apply: M0.
 exists (M * r) => //=; first by apply: mulr_gt0; rewrite // invr_gt0.
 move => z /= zMr.
-have -> : z = r*:(r^-1*:z). 
-  rewrite scalerA mulrV //= ?scale1r ?unitf_gt0 //.
+have -> : z = r*:(r^-1*:z).
+  by rewrite scalerA mulfV ?scale1r //; apply:lt0r_neq0.
 rewrite linearE normrZ gtr0_norm // ger_pMr //. 
 move: (H (r^-1 *: z)) => //=; rewrite -ball_normE /= normrZ. 
 rewrite mulrC  -[X in (`|X| <1)]opprB normrE subr0.

@@ -17,7 +17,7 @@ Import numFieldTopology.Exports.
 Lemma square_and_cube_modulo7 (m n p : nat) : m = n ^ 2 -> m = p ^ 3 ->
   (m == 0 %[mod 7]) || (m == 1 %[mod 7]).
 Proof.
-(*Cyril, what indication do you want to make*)
+(*Cyril, what indication do you want to put*)
 Admitted.
 
 Local Open Scope classical_set_scope.
@@ -66,14 +66,15 @@ Proof.
 Admitted. 
 
 (* The next exercise concerns normed spaces.*) 
-(* The notation "\near" is used in mathcomp-analysis
-to represent filter inclusion:
-  \forall x \near F, P x <-> F (fun x => P x). 
-A whole set of tactics and lemmas are available to reason with near.
-In normed spaces, these tactics allow to avoid giving the explicit distance between two points, 
-and reasoning with explicit epsilon.
-For now, you can get back to filter reasoning with nearE, 
-and explicit handling of epsilon thanks to a whole set of rewriting lemmas*)
+(* The notation "\near" is used in mathcomp-analysis to represent filter
+inclusion: \forall x \near F, P x <-> F (fun x => P x). A whole set of tactics
+and lemmas are available to reason with near.
+
+In normed spaces, these tactics allow to avoid giving the explicit distance
+between two points, and reasoning with explicit epsilon.
+
+For now, you can get back to filter reasoning with nearE, and explicit handling
+of epsilon thanks to a whole set of rewriting lemmas*)
 
 (* Notations :
  - _ *: _ : scalar multiplication, search for "scale" in lemmas' names.

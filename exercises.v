@@ -17,14 +17,17 @@ Import numFieldTopology.Exports.
 Lemma square_and_cube_modulo7 (m n p : nat) : m = n ^ 2 -> m = p ^ 3 ->
   (m == 0 %[mod 7]) || (m == 1 %[mod 7]).
 Proof.
-(* Proof suggestion *)
-(* 1. first subsitute the first equality inside the rest and get rid of m *)
+(* Proof suggestion. *)
+(* 1. First subsitute the first equality inside the rest and get rid of m *)
 (*    see rewrite or intro patterns (after the move=>) *)
-(* 2. the push the modulo "to the leaves" / "inside" *)
+(* 2. Take the modulo of the equation n ^ 2 = p ^ 2. *)
+(*    You can use have: to pose an intermediate statement. *)
+(*    Or you can use a congr1 in a forward view. *)
+(* 3. Then push the modulo "to the leaves" / inside *)
 (*    Hint: *) Search modn expn.
-(* 3. Generalize using the fact that a modulo 7 is smaller than 7 *)
+(* 4. Generalize using the fact that a modulo 7 is smaller than 7 *)
 (*    Hint: *) Search leq modn in div.
-(* 4. Perform 7 case analysis for each modulo 7 *)
+(* 5. Perform 7 case analysis for each modulo 7 *)
 (*    Use repeated case or repeated [] inside move=> *)
 Admitted.
 

@@ -184,29 +184,7 @@ rewrite linear0.
 (*and then we just go back to filter reasoning*)
 rewrite nearE //=  /+oo. 
 (* Your turn :-) *)
-(*Suggestion: 
-1. Use the image of the unit ball by f.
-*)
-Search "cont" "norm".
-move=> /(_(ball 0 1)) /(_ (nbhsx_ballx 0 1 ltr01)) //=.
-move=> /nbhs_norm0P [] /= M M0 H.
-exists M; split => //=.
-move => r Mr; apply/nbhs_norm0P=>/=.
-have r0 : 0 <r by apply: lt_trans; first by apply: M0.
-exists (M * r) => /=; first by apply: mulr_gt0; rewrite // invr_gt0.
-move => z /= zMr.
-have -> : z = r*:(r^-1*:z). 
-  rewrite scalerA mulrV //= ?scale1r ?unitf_gt0 //.
-rewrite linearE normrZ gtr0_norm // ger_pMr //. 
-move: (H (r^-1 *: z)) => //=; rewrite -ball_normE /= normrZ. 
-rewrite mulrC  -[X in (`|X| <1)]opprB normrE subr0.
-rewrite -ltr_pdivlMr normrV ?invr_gt0 ?normr_gt0.
-have -> :`|r| =r  by rewrite gtr0_norm. 
-rewrite invrK => /(_ zMr) H0; rewrite le_eqVlt;apply/orP; right => //.
-by apply: unitf_gt0.
-by apply: lt0r_neq0. 
-by apply: unitf_gt0.
-Qed.
+Admitted.
 
 
  

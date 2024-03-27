@@ -3,7 +3,7 @@
 This repository provides the supporting material for the Coq/Rocq sessions at the venue
 [Lean For The Curious Mathematician 2024 at CIRM](https://conferences.cirm-math.fr/2970.html).
 
-We provide two methods to explore the contents interactively and give a short desciption of the files.
+We provide three methods to explore the contents interactively and give a short desciption of the files.
 
 ## Usage
 
@@ -14,7 +14,7 @@ We provide two methods to explore the contents interactively and give a short de
 3. Click on one of the files and wait a few seconds
 4. In case of error press `F1` and type `> Coq LSP: Restart the Coq Language Server`
 
-### Local installation: clone & vscode
+### Local installation: clone & vscode (does not work with M2 mac)
 
 1. Clone the repository using `git clone https://github.com/CohenCyril/LFTCM2024_Rocq.git`
 2. Change directory to it `cd LFTCM2024_Rocq`
@@ -22,6 +22,19 @@ We provide two methods to explore the contents interactively and give a short de
 4. Confirm "Reopen in container" or press `F1` and type `Reopen in container`
 5. Click on one of the files and wait a few seconds
 6. In case of error press `F1` and type `> Coq LSP: Restart the Coq Language Server`
+
+### Global system installation: opam
+
+  1. Install [opam](https://opam.ocaml.org/doc/Install.html) and configure the [coq opam repository](https://coq.inria.fr/opam-using.html#coq-packages)
+  2. Clone and install the dependencies of the project
+  ```shell
+  git clone https://github.com/CohenCyril/LFTCM2024_Rocq.git
+  cd LFTCM2024_Rocq
+  opam install . --deps-only # to install dependencies
+  ```
+  3. run vscode `code .` and install the following extensions in your workspace:
+     - coq-lsp
+     - errorlens
 
 ## Contents
 

@@ -80,11 +80,19 @@ Lemma galNorm_fixedField {F : fieldType} {L : splittingFieldType F}
     (K E : {subfield L}) a :
   a \in E -> galNorm K E a \in fixedField 'Gal(E / K).
 Proof.
-move=> Ea; apply/fixedFieldP=> [|x galEx].
-  by apply: rpred_prod => x _; apply: memv_gal.
-rewrite {2}/galNorm (reindex_acts 'R _ galEx) ?astabsR //=.
-by rewrite rmorph_prod; apply: eq_bigr => y _; rewrite galM ?lfunE.
-Qed.
+move=> Ea.
+(* Use the characteristic property of fixed fields, do not unfold *)
+Search fixedField "P". (* this is an equivalence (reflect), so use apply/ *)
+(* You might need the following to complete the proof: *)
+About rpred_prod.
+About memv_gal.
+About reindex_acts.
+About astabsR.
+About rmorph_prod.
+About eq_bigr.
+About galM.
+About lfunE.
+Admitted.
 
 End Galois.
 

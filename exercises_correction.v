@@ -9,7 +9,7 @@ Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 
-Import Order.TTheory GRing.Theory Num.Def Num.Theory.
+Import Order.TTheory GRing.Theory Num.Theory.
 Import numFieldTopology.Exports.
 
 Lemma square_and_cube_modulo7 (m n p : nat) : m = n ^ 2 -> m = p ^ 3 ->
@@ -32,7 +32,7 @@ Lemma galNorm_fixedField {F : fieldType} {L : splittingFieldType F}
 Proof.
 move=> Ea; apply/fixedFieldP=> [|x galEx].
   by apply: rpred_prod => x _; apply: memv_gal.
-rewrite {2}/galNorm (reindex_acts 'R _ galEx) ?astabsR //=.
+rewrite [in RHS]/galNorm (reindex_acts 'R _ galEx) ?astabsR //=.
 by rewrite rmorph_prod; apply: eq_bigr => y _; rewrite galM ?lfunE.
 Qed.
 

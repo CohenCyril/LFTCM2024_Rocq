@@ -108,7 +108,7 @@ proof. Otherwise, no search nor any external lemmas are needed.  *)
 Lemma closed_diag_hausdorff (T : topologicalType) :
   closed [set (x, x) | x in [set: T]] <-> hausdorff_space T.
 Proof.
-rewrite /closed /hausdorff_space. split. rewrite /closure /cluster /=.
+split.
 Admitted.
 
 (* Continuity uses the limits --> notation, wich is just about filter inclusion.  *)
@@ -150,7 +150,22 @@ Check scale1r.
 (* uses "left_id" to denote "1*:r=r". *)
 
 
-(* The goal is now to find an alternate proof to the following *)
+(*THe following is another exercise to use continuity. 
+These are the lemmas to be used:*)
+About ex_bound.
+About linear0.
+About nbhs_le.
+
+Lemma continuous_linear_bounded_at0 (R : numFieldType) (V W : normedModType R)
+    (f : {linear V -> W}) :
+  {for 0, continuous f} -> bounded_near f (nbhs 0).
+Proof.
+Admitted.
+
+(* The following is the generalized version at any point x. If you want, you can
+try to do it without near *)
+(* Then we still suggest to use a structure that allow automation on positive
+numbers: https://github.com/math-comp/analysis/blob/master/theories/signed.v *)
 Lemma with_near (R : numFieldType) (V W : normedModType R)
     (x : V) (f : {linear V -> W}) :
   {for 0, continuous f} -> bounded_near f (nbhs x).
@@ -161,30 +176,3 @@ near=> M; apply/nbhs0P.
 apply: cvgr0_norm_le; rewrite // subr_gt0.
 by []. (* This is were it happens*)
 Unshelve. all: by end_near. Qed.
-
-
-(*Let's do that but without near, to understand what's going on*)
-(* This is a list of lemmas you might want to use:*)
-Check nearE.
-Check nbhs_norm0P.
-Check nbhsx_ballx.
-Check ltr01.
-Check lt_trans.
-Check mulr_gt0. 
-Check invr_gt0.
-
-Lemma continuous_linear_bounded (R : realFieldType) (V W : normedModType R)
-    (x : V) (f : {linear V -> W}) :
-  {for 0, continuous f} -> bounded_near f (nbhs 0).
-Proof.
-(*The beginning stays the same:
-we are unfolding and using the fact that f(0)=0*)
-rewrite /prop_for /continuous_at /(_ @ _) /bounded_near //= /=.
-rewrite linear0.
-(*and then we just go back to filter reasoning*)
-rewrite nearE //=  /+oo. 
-(* Your turn :-) *)
-(*Suggestion: 
-1. Use the pre-image of the unit ball by f, and use continuity.*)
-Admitted.
- 

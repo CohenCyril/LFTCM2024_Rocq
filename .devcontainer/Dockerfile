@@ -1,7 +1,4 @@
-FROM coqorg/coq:8.19.1
+FROM mathcomp/mathcomp:2.2.0-coq-8.19
 RUN eval $(opam env "--switch=${COMPILER}" --set-switch)
-RUN opam update -y
-RUN opam install -y coq-lsp
-RUN opam install -y coq-mathcomp-character
-RUN opam install -y coq-mathcomp-algebra-tactics
-RUN opam install -y coq-mathcomp-analysis
+RUN git clone -b main --depth 1 https://github.com/CohenCyril/LFTCM2024_Rocq
+RUN opam install -y --deps-only ./LFTCM2024_Rocq

@@ -285,23 +285,59 @@ F, the canonical filter of neighborhoods of x is included in F *)
 
 (* The notation f @` A is used to denote the image of A : set E by f : E -> F *)
 
+(* Continuity at x for a function f is defined as : f `@ x --> f x, meaning the
+filter of neighborhoods of (f x) is included in the image by f of the filter of
+neighborhoods of x *)
+
 Lemma add_continuous_without_near (R : numFieldType)  (V : normedModType R): 
 continuous (fun z : V * V => z.1 + z.2).
 Proof.
 move=> []. (* Let's destruct the continuous predicate*)
 move=> x y /=. (* Let's introduce points*)
 move=>A.
-(* I'm just intrucing the appropriate neighborhood as I want to work on the statement
+(* I'm just introdcing the appropriate neighborhood as I want to work on the statement
  that it is a neighborhood*)
 move=>/nbhs_ballP. (* This allows me to say that A contains a ball around (x,y)*)
-move=> []. (*And I just destruct the statement *)
-move=> [/= x y]; apply/cvgrPdist_lt=> _/posnumP[e]; near=> a b => /=.
-by rewrite opprD addrACA normm_lt_split.
-Unshelve. all: by end_near. Qed.
+move=> [] /=.  (*And I just destruct the statement *)
+move=> r r0 H.
+apply/nbhs_ballP=>/=.
+exists (r/2).
+   Search ( 0 < _ /_). (* now I see that all I need is divr_gt0, 
+   and that the other results should be infered from the context or computed.*)
+   by apply: divr_gt0.
+(* Now we need to prove an inclusion of sets: this is what the notaion `<=` is for*)
+move=> /= z. 
+(* Let's destruc what a ball is a product space is*)
+move=> [] /=. 
+(*We might want to rewrite this ball with a norm. This is done trough the
+ball_normE lemma and computation *) 
+Check ball_normE.
+rewrite -ball_normE /=.
+move=> Bx By.
+apply: H. 
+rewrite -ball_normE /=.
+(*Now I'll use a lemma allowing me to split the norm in two, but before that
+I'll need to do some rewriting*)
+rewrite opprD.
+rewrite addrACA.
+by rewrite normm_lt_split.
+Qed.
 
+(* In short and without near, this would give:*)
+Lemma add_continuous_short (R : numFieldType)  (V : normedModType R): 
+continuous (fun z : V * V => z.1 + z.2).
+Proof.
+move=> [x y /=] A => /nbhs_ballP [/= r r0] H.
+apply/nbhs_ballP=>/=.
+exists (r/2); first by apply: divr_gt0.
+move=> /= z []; rewrite -ball_normE /= => Bx By. 
+by apply: H; rewrite -ball_normE /= opprD addrACA normm_lt_split.
+Qed.
+
+(* With near, we avoid the explicit handling of (r/2)*)
 Lemma add_continuous_with_near (R : numFieldType)  (V : normedModType R): 
 continuous (fun z : V * V => z.1 + z.2).
 Proof.
-move=> [/= x y]; apply/cvgrPdist_lt=> _/posnumP[e]; near=> a b => /=.
+move=> [/= x y]; apply/cvgrPdist_lt => _/posnumP[e]; near=> a b => /=.
 by rewrite opprD addrACA normm_lt_split.
 Unshelve. all: by end_near. Qed.

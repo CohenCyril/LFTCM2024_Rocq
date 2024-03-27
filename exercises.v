@@ -137,6 +137,7 @@ Proof.
 rewrite /prop_for /continuous_at linear0 /bounded_near => f0.
 near=> M; apply/nbhs0P.
  near do rewrite /= linearD (le_trans (ler_normD _ _))// -lerBrDl.
-by apply: cvgr0_norm_le; rewrite // subr_gt0.
+apply: cvgr0_norm_le; rewrite // subr_gt0.
+by []. (* This is were it happens*)
 Unshelve. all: by end_near. Qed.
  

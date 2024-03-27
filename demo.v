@@ -236,8 +236,11 @@ move=> [k hk]. (* `k` is the witness, `hk` is its property *)
 rewrite hk. by []. (* That's something hard encoded in the ssrnat library *)
 Qed.
 
-Lemma EM_bool (b1 b2 : bool) : b1 || ~~ b1.
+Lemma case_bool (b1 b2 : bool) : b1 || ~~ b1.
 Proof. by case: b1. Qed.
+
+Lemma case_nat (n: nat) : (n= 0) \/ (0<n).
+Proof. case: n; first by left. by move=> n; right. Qed.
 
 From mathcomp Require Import intdiv Rstruct reals exp.
 Local Open Scope nat_scope.
@@ -248,7 +251,7 @@ Notation irrational := [predC rational].
 
 Theorem sqrt2_irrational : sqrt 2 \in irrational.
 Proof.
-apply/negP; rewrite inE /=; case=> x _; case: (ratP x) => p q _.
+apply/negP; rewrite inE /=; case => x _ ; case: (ratP x) => p q _.
 rewrite rmorphM fmorphV/= !ratr_int.
 move=> /(congr1 (fun x : R => (x ^+ 2))).
 rewrite sqr_sqrtr// exprMn exprVn -!rmorphXn/= => /(canRL (mulfVK _)).
@@ -271,7 +274,34 @@ rewrite -powRrM -expr2 sqr_sqrtr// powR_mulrn// ?sqrtr_ge0//.
 by rewrite sqr_sqrtr// inE/=; exists 2 => //=; rewrite ratr_nat.
 Qed.
 
-(* suff, wlog *)
+(** Near  notations and tactics**)
 
+Local Open Scope classical_set_scope.
+Local Open Scope ring_scope.
 
-(* near *)
+(* Continuity uses the limits --> notation, wich is just about filter inclusion.
+The notation F --> x where F is a filter. This is a notation for (nbhs x) `<=`
+F, the canonical filter of neighborhoods of x is included in F *)
+
+(* The notation f @` A is used to denote the image of A : set E by f : E -> F *)
+
+Lemma add_continuous_without_near (R : numFieldType)  (V : normedModType R): 
+continuous (fun z : V * V => z.1 + z.2).
+Proof.
+move=> []. (* Let's destruct the continuous predicate*)
+move=> x y /=. (* Let's introduce points*)
+move=>A.
+(* I'm just intrucing the appropriate neighborhood as I want to work on the statement
+ that it is a neighborhood*)
+move=>/nbhs_ballP. (* This allows me to say that A contains a ball around (x,y)*)
+move=> []. (*And I just destruct the statement *)
+move=> [/= x y]; apply/cvgrPdist_lt=> _/posnumP[e]; near=> a b => /=.
+by rewrite opprD addrACA normm_lt_split.
+Unshelve. all: by end_near. Qed.
+
+Lemma add_continuous_with_near (R : numFieldType)  (V : normedModType R): 
+continuous (fun z : V * V => z.1 + z.2).
+Proof.
+move=> [/= x y]; apply/cvgrPdist_lt=> _/posnumP[e]; near=> a b => /=.
+by rewrite opprD addrACA normm_lt_split.
+Unshelve. all: by end_near. Qed.

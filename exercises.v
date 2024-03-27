@@ -108,7 +108,7 @@ proof. Otherwise, no search nor any external lemmas are needed.  *)
 Lemma closed_diag_hausdorff (T : topologicalType) :
   closed [set (x, x) | x in [set: T]] <-> hausdorff_space T.
 Proof.
-rewrite /closed /hausdorff_space.
+rewrite /closed /hausdorff_space. split. rewrite /closure /cluster /=.
 Admitted.
 
 (* Continuity uses the limits --> notation, wich is just about filter inclusion.  *)
@@ -180,15 +180,15 @@ Proof.
 (*The beginning stays the same:
 we are unfolding and using the fact that f(0)=0*)
 rewrite /prop_for /continuous_at /(_ @ _) /bounded_near //= /=.
-rewrite linear0 => f0.
+rewrite linear0.
 (*and then we just go back to filter reasoning*)
 rewrite nearE //=  /+oo. 
 (* Your turn :-) *)
 (*Suggestion: 
-1. Use the image of the unit ball by f "f0 (ball 0 1)" by putting it back on top
-   of the stack.
+1. Use the image of the unit ball by f.
 *)
-move: (f0 (ball 0 1)) => /(_ (nbhsx_ballx 0 1 ltr01)) //=.
+Search "cont" "norm".
+move=> /(_(ball 0 1)) /(_ (nbhsx_ballx 0 1 ltr01)) //=.
 move=> /nbhs_norm0P [] /= M M0 H.
 exists M; split => //=.
 move => r Mr; apply/nbhs_norm0P=>/=.

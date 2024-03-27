@@ -76,9 +76,9 @@ to represent filter inclusion:
   \forall x \near F, P x <-> F (fun x => P x). 
 A whole set of tactics and lemmas are available to reason with near.
  For now, you can get back to filter reasoning with near E*)
-rewrite nearE //=  /+oo. 
+rewrite nearE //=  /+oo. nbhs_normP.
 move: (f0 (ball 0 1)).
-move => /(_ (nbhsx_ballx 0 1 ltr01)) //= /nbhs_norm0P [] /= M M0 H.
+move => /(_ (nbhsx_ballx 0 1 ltr01)) //= /nbhs_norm0P [] /= r r0 H.
 exists M; split. 
  by rewrite realE; apply/orP; left; rewrite le0r; apply/orP;right. 
 move => r Mr; apply/nbhs_norm0P=>/=.

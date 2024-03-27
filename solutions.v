@@ -15,8 +15,22 @@ Import numFieldTopology.Exports.
 Lemma square_and_cube_modulo7 (m n p : nat) : m = n ^ 2 -> m = p ^ 3 ->
   (m == 0 %[mod 7]) || (m == 1 %[mod 7]).
 Proof.
-move=> -> /(congr1 (modn^~ 7)); rewrite -modnXm -[in RHS]modnXm.
+(* Proof suggestion. *)
+(* 1. First subsitute the first equality inside the rest and get rid of m *)
+(*    see rewrite or intro patterns (after the move=>) *)
+move=> ->.
+(* 2. Take the modulo of the equation n ^ 2 = p ^ 2. *)
+(*    You can use have: to pose an intermediate statement. *)
+(*    Or you can use a congr1 in a forward view. *)
+move=> /(congr1 (modn^~ 7)).
+(* 3. Then push the modulo "to the leaves" / inside *)
+(*    Hint: *) Search modn expn.
+rewrite -modnXm -[in RHS]modnXm.
+(* 4. Generalize using the fact that a modulo 7 is smaller than 7 *)
+(*    Hint: *) Search leq modn in div.
 move: (n %% 7) (p %% 7) (@ltn_pmod n 7 isT) (@ltn_pmod p 7 isT).
+(* 5. Perform 7 case analysis for each modulo 7 *)
+(*    Use repeated case or repeated [] inside move=> *)
 by do 7?[case=> //]; do 7?[case=> //].
 Qed.
 
@@ -30,6 +44,9 @@ Lemma galNorm_fixedField {F : fieldType} {L : splittingFieldType F}
     (K E : {subfield L}) a :
   a \in E -> galNorm K E a \in fixedField 'Gal(E / K).
 Proof.
+(* Use the characteristic property of fixed fields, do not unfold *)
+Search fixedField "P". (* this is an equivalence (reflect), so use apply/ *)
+(* You might need the following to complete the proof: *)
 move=> Ea; apply/fixedFieldP=> [|x galEx].
   by apply: rpred_prod => x _; apply: memv_gal.
 rewrite [in RHS]/galNorm (reindex_acts 'R _ galEx) ?astabsR //=.

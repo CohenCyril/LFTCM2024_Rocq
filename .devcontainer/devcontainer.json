@@ -4,7 +4,8 @@
     "postAttachCommand": "make -j8 -k",
     "customizations": {
         "vscode": {
-            "extensions": ["ejgallego.coq-lsp", "gares.elpi-lang", "gares.coq-elpi-lang"],
+            "extensions": ["ejgallego.coq-lsp", "gares.elpi-lang",
+              "gares.coq-elpi-lang", "usernamehw.vscode-error-lens"]
         }
     }
 }

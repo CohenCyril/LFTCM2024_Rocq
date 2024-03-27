@@ -1,5 +1,6 @@
 From mathcomp Require Import all_ssreflect ssralg ssrint ssrnum finmap matrix.
-From mathcomp Require Import rat interval zmodp vector fieldext falgebra.
+From mathcomp Require Import fingroup action.
+From mathcomp Require Import rat interval zmodp vector fieldext falgebra galois.
 From mathcomp Require Import mathcomp_extra boolp classical_sets functions.
 From mathcomp Require Import cardinality set_interval Rstruct.
 From mathcomp Require Import ereal reals signed topology prodnormedzmodule normedtype.
@@ -21,6 +22,21 @@ Qed.
 
 Local Open Scope classical_set_scope.
 Local Open Scope ring_scope.
+
+Section Galois.
+Import GroupScope.
+
+Lemma galNorm_fixedField {F : fieldType} {L : splittingFieldType F}
+    (K E : {subfield L}) a :
+  a \in E -> galNorm K E a \in fixedField 'Gal(E / K).
+Proof.
+move=> Ea; apply/fixedFieldP=> [|x galEx].
+  by apply: rpred_prod => x _; apply: memv_gal.
+rewrite {2}/galNorm (reindex_acts 'R _ galEx) ?astabsR //=.
+by rewrite rmorph_prod; apply: eq_bigr => y _; rewrite galM ?lfunE.
+Qed.
+
+End Galois.
 
 Lemma closed_diag_hausdorff (T : topologicalType) :
   closed [set (x, x) | x in [set: T]] <-> hausdorff_space T.

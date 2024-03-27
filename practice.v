@@ -50,7 +50,7 @@ Unset Printing Implicit Defensive.
 (* This sheets feature one exercice on basic number theory, two exercises on
  basic topology, and one exercice on boundedness in normed spaces *)
 
-Import Order.TTheory GRing.Theory Num.Def Num.Theory.
+Import Order.TTheory GRing.Theory Num.Theory.
 Import numFieldTopology.Exports.
 
 Lemma square_and_cube_modulo7 (m n p : nat) : m = n ^ 2 -> m = p ^ 3 ->

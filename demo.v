@@ -33,7 +33,7 @@ and the MathComp library *)
 (*    []     |   〈 〉    *)
 
 (* Invariants between Lean and Ssreflect *)
-(*  left right exists split |   *)
+(*  left right exists split ...   *)
 
 
 
@@ -344,10 +344,40 @@ move=> /= z []; rewrite -ball_normE /= => Bx By.
 by apply: H; rewrite -ball_normE /= opprD addrACA normm_lt_split.
 Qed.
 
-(* With near, we avoid the explicit handling of (r/2)*)
+(* With near, we avoir or delay the explicit handling of (r/2)*)
 Lemma add_continuous_with_near (R : numFieldType)  (V : normedModType R): 
 continuous (fun z : V * V => z.1 + z.2).
 Proof.
-move=> [/= x y]; apply/cvgrPdist_lt => _/posnumP[e]; near=> a b => /=.
+move=> [/= x y]; apply/cvgrPdist_lt =>/= e e0.
+near=> a b => /=.
+rewrite opprD addrACA normm_lt_split //.
+  by near:a; apply: cvgr_dist_lt => //; apply: divr_gt0.
+by near:b; apply: cvgr_dist_lt => //; apply: divr_gt0.
+(*[near: a|near: b]; apply: cvgr_dist_lt => //; apply: divr_gt0.
+*)
+Unshelve. all: by end_near. Qed.
+(*For this short proof, we have not gained a lot. The posNum type allows to
+automatically infer positivity and to avoir the two last lines*)
+
+Lemma add_continuous_with_near_and_pos (R : numFieldType)  (V : normedModType R): 
+continuous (fun z : V * V => z.1 + z.2).
+Proof.
+move=> [/= x y]; apply/cvgrPdist_lt=> _/posnumP[e]; near=> a b => /=.
 by rewrite opprD addrACA normm_lt_split.
 Unshelve. all: by end_near. Qed.
+
+
+(*For short proofs this might not seem important. 
+For long proofs, it makes a huge difference*)
+
+Lemma continuous_bounded (R : numFieldType) (V W : normedModType R)
+    (x : V) (f : {linear V -> W}) :
+  {for 0, continuous f} -> bounded_near f (nbhs x).
+Proof.
+rewrite /prop_for /continuous_at linear0 /bounded_near => f0.
+near=> M; apply/nbhs0P.
+ near do rewrite /= linearD (le_trans (ler_normD _ _))// -lerBrDl.
+apply: cvgr0_norm_le; rewrite // subr_gt0.
+by []. (* This is were it happens*)
+Unshelve. all: by end_near. Qed.
+

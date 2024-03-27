@@ -62,40 +62,24 @@ Qed.
 
 
 
-Lemma continuous_linear_bounded (R : numFieldType) (V W : normedModType R)
-    (x : V) (f : {linear V -> W}) :
+Lemma continuous_linear_bounded_at0 (R : numFieldType) (V W : normedModType R)
+    (f : {linear V -> W}) :
   {for 0, continuous f} -> bounded_near f (nbhs 0).
 Proof.
-rewrite /prop_for /continuous_at /(_ @ _) /bounded_near //=.
-(*You will witness the notation F --> x where F is a filter. 
-This is a notation for (nbhs x) `<=` F,
-the canonical filter of neighborhoods of x is included in F  *)
-rewrite linear0 => f0.
-(* The notation "\near" is used in mathcomp-analysis
-to represent filter inclusion:
-  \forall x \near F, P x <-> F (fun x => P x). 
-A whole set of tactics and lemmas are available to reason with near.
- For now, you can get back to filter reasoning with near E*)
-rewrite nearE //=  /+oo. nbhs_normP.
-move: (f0 (ball 0 1)).
-move => /(_ (nbhsx_ballx 0 1 ltr01)) //= /nbhs_norm0P [] /= r r0 H.
-exists M; split. 
- by rewrite realE; apply/orP; left; rewrite le0r; apply/orP;right. 
-move => r Mr; apply/nbhs_norm0P=>/=.
-have r0 : 0 <r by apply: lt_trans; first by apply: M0.
-exists (M * r) => //=; first by apply: mulr_gt0; rewrite // invr_gt0.
-move => z /= zMr.
-have -> : z = r*:(r^-1*:z).
-  by rewrite scalerA mulfV ?scale1r //; apply:lt0r_neq0.
-rewrite linearE normrZ gtr0_norm // ger_pMr //. 
-move: (H (r^-1 *: z)) => //=; rewrite -ball_normE /= normrZ. 
-rewrite mulrC  -[X in (`|X| <1)]opprB normrE subr0.
-rewrite -ltr_pdivlMr normrV ?invr_gt0 ?normr_gt0.
-have -> :`|r| =r  by rewrite gtr0_norm. 
-rewrite invrK => /(_ zMr) H0; rewrite le_eqVlt;apply/orP; right => //.
-by apply: unitf_gt0.
-by apply: lt0r_neq0. 
-by apply: unitf_gt0.
+move=> f0.
+(* do not unfold bounded_near! *)
+Search bounded_near.
+rewrite ex_bound.
+(* Pick a bound *)
+exists 1.
+(* Use a domain specific simplification lemma *)
+rewrite near_simpl/=.
+(* Use the continuity hypothesis *)
+apply: (f0 [set z | `|z| <= 1]).
+(* Use linearity *)
+rewrite linear0.
+apply: nbhs0_le.
+done.
 Qed.
 
 Lemma with_near (R : numFieldType) (V W : normedModType R)

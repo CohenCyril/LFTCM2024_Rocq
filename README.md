@@ -19,7 +19,7 @@ We provide three methods to explore the contents interactively and give a short 
 1. Clone the repository using `git clone https://github.com/CohenCyril/LFTCM2024_Rocq.git`
 2. Change directory to it `cd LFTCM2024_Rocq`
 3. Launch vscode using `code .`
-4. Confirm "Reopen in container" or press `F1` and type `Reopen in container`
+4. Confirm "Reopen in container" or press `F1` and type `> Reopen in container`
 5. Click on one of the files and wait a few seconds
 6. In case of error press `F1` and type `> Coq LSP: Restart the Coq Language Server`
 

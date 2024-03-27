@@ -105,13 +105,29 @@ is closed. You might want to unfold definitions to understand how they are
 structured, but it is not necessary to unfold them in the final version of the
 proof. Otherwise, no search nor any external lemmas are needed.  *)
 
-Lemma closed_diag_hausdorff (T : topologicalType) :
-  closed [set (x, x) | x in [set: T]] <-> hausdorff_space T.
-Proof.
-split.
+(*Here's the idea for the proof: a space is hausdorff by definition if any two
+different points x y can always be separated by a neighborhood V *)
+Print hausdorff_space.
+(* Another way to state that, which is what is defined above,
+ is that if x is is every neighborhood of y, then x=y *)
+ (* Now supposed the diagonal is closed. Then if y is in every neighborhood that
+ contains x, then (y,x) is in the closure of the diagonal, and thus y=x*)
+ 
+ (* More formally, the diagonal is  [set (x, x) | x in [set: T]]. 
+Neigborhoods in the products are exactly product of neighborhoods.*)
+Print closed.
+Print closure.
+
+(* A set C is closed if it contains its closure, that is if its contains all the
+points p such that all neighborhood of p intersects C .*)
+
+Lemma closed_diag_hausdorff (T : topologicalType) : closed [set (x, x) | x in [set: T]] <-> hausdorff_space T. 
+Proof. 
+split. 
 Admitted.
 
-(* Continuity uses the limits --> notation, wich is just about filter inclusion.  *)
+(* Continuity uses the limits --> notation, wich is just about filter inclusion.
+*)
 About continuous.
 (*You will witness the notation F --> x where F is a filter. This is a notation
 for (nbhs x) `<=` F, the canonical filter of neighborhoods of x is included in F

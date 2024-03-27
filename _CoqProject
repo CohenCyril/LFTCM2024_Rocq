@@ -1,3 +1,5 @@
-exercises.v
+tutorial.v
+practice.v
+solutions.v
 
 -R . LFCM2024

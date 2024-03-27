@@ -1,11 +1,10 @@
 {
     "name": "LFCM2024-deps",
     "image": "cohencyril/lfcm2024-deps",
-    "postAttachCommand": "make -j8 -k",
     "customizations": {
         "vscode": {
             "extensions": ["ejgallego.coq-lsp", "gares.elpi-lang",
-              "gares.coq-elpi-lang", "usernamehw.vscode-error-lens"]
+              "gares.coq-elpi-lang", "usernamehw.errorlens"]
         }
     }
 }

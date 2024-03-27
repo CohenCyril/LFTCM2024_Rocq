@@ -3,7 +3,7 @@ From mathcomp Require Import rat interval zmodp vector fieldext falgebra.
 From mathcomp Require Import mathcomp_extra boolp classical_sets functions.
 From mathcomp Require Import cardinality set_interval Rstruct.
 From mathcomp Require Import ereal reals signed topology prodnormedzmodule normedtype.
-
+From mathcomp Require Import ring lra.
 Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
@@ -126,16 +126,45 @@ of epsilon thanks to a whole set of rewriting lemmas*)
 Check scale1r.
 (* uses "left_id" to denote "1*:r=r". *)
 
-(*Here's a set of lemmas that might be useful. *)
-(* TODO *)
-(*TODO : find a simpler proof without orP *)
+
+(* The goal is now to find an alternate proof to the following *)
+Lemma with_near (R : numFieldType) (V W : normedModType R)
+    (x : V) (f : {linear V -> W}) :
+  {for 0, continuous f} -> bounded_near f (nbhs x).
+Proof.
+rewrite /prop_for /continuous_at linear0 /bounded_near => f0.
+near=> M; apply/nbhs0P.
+ near do rewrite /= linearD (le_trans (ler_normD _ _))// -lerBrDl.
+apply: cvgr0_norm_le; rewrite // subr_gt0.
+by []. (* This is were it happens*)
+Unshelve. all: by end_near. Qed.
+
+
+(*Let's do that but without near, to understand what's going on*)
+(* This is a list of lemmas you might want to use:*)
+Check nearE.
+Check nbhs_norm0P.
+Check nbhsx_ballx.
+Check ltr01.
+Check lt_trans.
+Check mulr_gt0. 
+Check invr_gt0.
+
 Lemma continuous_linear_bounded (R : realFieldType) (V W : normedModType R)
     (x : V) (f : {linear V -> W}) :
   {for 0, continuous f} -> bounded_near f (nbhs 0).
 Proof.
+(*The beginning stays the same:
+we are unfolding and using the fact that f(0)=0*)
 rewrite /prop_for /continuous_at /(_ @ _) /bounded_near //= /=.
 rewrite linear0 => f0.
+(*and then we just go back to filter reasoning*)
 rewrite nearE //=  /+oo. 
+(* Your turn :-) *)
+(*Suggestion: 
+1. Use the image of the unit ball by f "f0 (ball 0 1)" by putting it back on top
+   of the stack.
+*)
 move: (f0 (ball 0 1)) => /(_ (nbhsx_ballx 0 1 ltr01)) //=.
 move=> /nbhs_norm0P [] /= M M0 H.
 exists M; split => //=.
@@ -156,14 +185,5 @@ by apply: lt0r_neq0.
 by apply: unitf_gt0.
 Qed.
 
-Lemma with_near (R : numFieldType) (V W : normedModType R)
-    (x : V) (f : {linear V -> W}) :
-  {for 0, continuous f} -> bounded_near f (nbhs x).
-Proof.
-rewrite /prop_for /continuous_at linear0 /bounded_near => f0.
-near=> M; apply/nbhs0P.
- near do rewrite /= linearD (le_trans (ler_normD _ _))// -lerBrDl.
-apply: cvgr0_norm_le; rewrite // subr_gt0.
-by []. (* This is were it happens*)
-Unshelve. all: by end_near. Qed.
+
  

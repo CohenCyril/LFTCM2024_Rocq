@@ -74,7 +74,7 @@ Proof.
 move=> n _ n6. (* m is not needed, let's forget about it *)
 Admitted.
 
-(** Rewrites **)
+(** REWRITES **)
 
 (* As in Lean, one can rewrite thanks to an equality, going forward or backward *)
 Lemma rewrite1 (n m : nat) : n = m -> 1 + n = 1 + m.
@@ -105,8 +105,7 @@ Proof.
 by move=> H; rewrite H.
 Qed.
 
-(* To be honest, we do not want to bother introducing H, just write "->" instead of H*)
-
+(* In fact, we do not want to bother introducing H, just write "->" instead of H*)
 Lemma rewrite_directly (n m : nat) : n = m -> 1 + n =  1 + m.
 Proof.
 by move=> ->.
@@ -166,6 +165,11 @@ subgoals before concluding with //*)
 (*by move=> r0; rewrite scalerA mulfV ?scale1r.*)
 Qed.
 
+(*Now thanks to rewrite and to an externa lemma we can proove our first lemma*)
+Check Gauss_dvd.
+Check dvdn_mulr.
+Check dvdn_mull.
+
 Lemma divand_full m n : 2 %| n /\ 3 %| m -> 6 %| n * m .
 Proof.
 move=> [dvd2n dvd3n].
@@ -174,7 +178,7 @@ by rewrite dvdn_mulr// dvdn_mull.
 Qed.
 
 
-(** Search **)
+(** SEARCH **)
 
 Search
 (* Maybe on words I may want to find in the name of the lemma *) "mul"
@@ -183,7 +187,7 @@ Search
 
 Close Scope ring_scope.
 
-(** An Apply a day **)
+(** VIEWS AND APPLY **)
 
 
 Lemma applied (P Q : Prop): (P -> Q) -> P -> Q.
@@ -201,8 +205,7 @@ move=> H. move=> /H. by [].
 (* by move=> H /H.*)
 Qed.
 
-(*Views can also be used with equivalences*)
-
+(*Views can also be used with equivalences. You don't need to chose implication to use*)
 Lemma applied_eq (P Q : Prop): (P <-> Q) -> P -> Q.
 Proof.
 by move=> H /H.
@@ -210,7 +213,6 @@ Qed.
 
 (* Sometimes it's easier to feed an argument to a lemma than to apply the lemma.
 This is done thanks to /(_ a) when the lemma is on top of the stack *)
-
 Lemma applied_arg (P Q : Prop): P -> (P -> Q) -> Q.
 Proof.
 move=> HP /(_ HP).
@@ -225,7 +227,7 @@ move=> + HP. move=> /(_ HP).
 by [].
 Qed.
 
-(** Case **)
+(** CASE **)
 
 (* case=> destructs an hypothesis while putting it in the context,
 case:_ destruct inductive proposition while taking it from the context *)
@@ -242,6 +244,7 @@ Proof. by case: b1. Qed.
 Lemma case_nat (n: nat) : (n= 0) \/ (0<n).
 Proof. case: n; first by left. by move=> n; right. Qed.
 
+(* Let's switch to more intricate objects *)
 From mathcomp Require Import intdiv Rstruct reals exp.
 Local Open Scope nat_scope.
 Local Open Scope ring_scope.
@@ -249,9 +252,16 @@ Notation sqrt := Num.sqrt.
 Notation rational := (range (@ratr R)).
 Notation irrational := [predC rational].
 
+(* In the proof for the irrationality of sqrt 2, we use case to destruct several hypotheses*)
 Theorem sqrt2_irrational : sqrt 2 \in irrational.
 Proof.
-apply/negP; rewrite inE /=; case => x _ ; case: (ratP x) => p q _.
+apply/negP; rewrite inE /=.
+(* we use case on the first assumption to extract the witness x *)
+case => x _ .
+(*and then we use case on a newly introduced hypothesis, namely a good
+characterization of rationals *)
+(*move: (ratP x); case => p q _*)
+case: (ratP x) => p q _.
 rewrite rmorphM fmorphV/= !ratr_int.
 move=> /(congr1 (fun x : R => (x ^+ 2))).
 rewrite sqr_sqrtr// exprMn exprVn -!rmorphXn/= => /(canRL (mulfVK _)).

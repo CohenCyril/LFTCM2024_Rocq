@@ -8,6 +8,44 @@ Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 
+(* Remember our basic sets of tactics: 
+- "move => H" and "move: H" to put an hypothesis from the goal to context, and
+  vice-versa. To break H, use move => [A B]
+- The signs // /= can be use to refer to an hypothesis in the context and to
+  apply basic computations.  When in doubt, keep calm and try " move => //="/.
+- have lem := .... allows you to introduce an intermediate goal. Insteas of
+  "lem", you can also write "->" or "<-" to rewrite, or "[]"to break the lemma
+  in its sub logical parts.
+  - exists: x  allows to prove an existential goal
+  - rewrite (with all its patterns) does rewriting.
+  - appply: H. applies the hypothesis or lemma H. 
+  - A "view" is a lemma of the form T : H -> H' or T: H <-> H', which transforms
+    an hypothesis on the top of the stack when we do  move=> /H.. 
+
+  *)
+
+(* Dictionnary *)
+(* SSreflect /  Approximate Lean *)
+
+(* move=>    | rintros *)
+(* move:     | revert  *)
+(* rewrite   | rw      *)
+(*           | simp    *)
+(* rewrite / | dsimp   *)
+(* apply:    | apply   *)
+(*   ;       |   <;>   *)
+(*   ; first |    ;    *)
+(*    /=     |         *)
+(*    //     |         *)
+(*    []     |   〈 〉    *)
+
+(* Invariants between Lean and Ssreflect *)
+(*  left right exists split ...   *)
+
+(* Basic and advanced cheat sheets  *)
+(* http://www-sop.inria.fr/marelle/math-comp-tut-16/MathCompWS/basic-cheatsheet.pdf *)
+(*  http://www-sop.inria.fr/marelle/math-comp-tut-16/MathCompWS/cheatsheet.pdf *)
+
 (* This sheets feature one exercice on basic number theory, two exercises on
  basic topology, and one exercice on boundedness in normed spaces *)
 
@@ -34,33 +72,20 @@ Admitted.
 Local Open Scope classical_set_scope.
 Local Open Scope ring_scope.
 
-(* Remember our basic sets of tactics: 
-- "move => H" and "move: H" to put an hypothesis from the goal to context, and
-  vice-versa. To break H, use move => [A B]
-- The signs // /= can be use to refer to an hypothesis in the context and to
-  apply basic computations.  When in doubt, keep calm and try " move => //="/.
-- have lem := .... allows you to introduce an intermediate goal. Insteas of
-  "lem", you can also write "->" or "<-" to rewrite, or "[]"to break the lemma
-  in its sub logical parts.
-  - exists: x  allows to prove an existential goal
-  - rewrite (with all its patterns) does rewriting.
-  - appply: H. applies the hypothesis or lemma H. 
-  - A "view" is a lemma of the form T : H -> H' or T: H <-> H'. 
-  
-  *)
-
-(* Basic and advanced cheat sheets  *)
-(* http://www-sop.inria.fr/marelle/math-comp-tut-16/MathCompWS/basic-cheatsheet.pdf *)
-(*  http://www-sop.inria.fr/marelle/math-comp-tut-16/MathCompWS/cheatsheet.pdf *)
-
 
 (* Information about notations and theorem can be found in the header of 
 https://github.com/math-comp/analysis/blob/master/theories/topology.v 
  But should not be needed for the next two exercises *)  
 
+(*Let us show that a Topological space is hausdorff if and only if its diagonal
+is closed. You might want to unfold definitions to understand how they are
+structured, but it is not necessary to unfold them in the final version of the
+proof. Otherwise, no search nor any external lemmas are needed.  *)
+
 Lemma closed_diag_hausdorff (T : topologicalType) :
   closed [set (x, x) | x in [set: T]] <-> hausdorff_space T.
 Proof.
+rewrite /closed /hausdorff_space.
 Admitted.
 
 (* Continuity uses the limits --> notation, wich is just about filter inclusion.  *)
@@ -71,6 +96,7 @@ for (nbhs x) `<=` F, the canonical filter of neighborhoods of x is included in F
 
 (* The notation f @^-1` A is used to denote the reverse image of A (included in
 F) by f : E -> F *)
+
 Lemma closed_graph_function (T U : topologicalType) (f  : T -> U): 
   hausdorff_space U -> continuous f -> closed [set xy | f(xy.1) = xy.2].
 Proof.

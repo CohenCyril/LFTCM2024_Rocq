@@ -13,16 +13,16 @@ Unset Printing Implicit Defensive.
 - "move => H" and "move: H" to put an hypothesis from the goal to context, and
   vice-versa. To break H, use move => [A B]
 - The signs // /= can be use to refer to an hypothesis in the context and to
-  apply basic computations.  When in doubt, keep calm and try " move => //="/.
-- have lem := .... allows you to introduce an intermediate goal. Insteas of
-  "lem", you can also write "->" or "<-" to rewrite, or "[]"to break the lemma
-  in its sub logical parts.
-  - exists: x  allows to prove an existential goal
-  - rewrite (with all its patterns) does rewriting.
-  - appply: H. applies the hypothesis or lemma H. 
-  - A "view" is a lemma of the form T : H -> H' or T: H <-> H', which transforms
+  apply basic computations.  When in doubt, keep calm and try " move => //="...
+- exists: x  allows to prove an existential goal
+- rewrite (with all its patterns) does rewriting.
+- appply: H. applies the hypothesis or lemma H. 
+- A "view" is a lemma of the form T : H -> H' or T: H <-> H', which transforms
     an hypothesis on the top of the stack when we do  move=> /H.. 
-
+- have lem : .... allows you to introduce an intermediate goal. Instead of 
+  "lem", you can also write "->" or "<-" to rewrite, or "[]"to break the lemma
+  in its sub logical parts, and you might also want to apply a view direclty 
+  have /view : ..
   *)
 
 (* Dictionnary *)
@@ -166,7 +166,7 @@ Check scale1r.
 (* uses "left_id" to denote "1*:r=r". *)
 
 
-(*THe following is another exercise to use continuity. 
+(*The following is another exercise to use continuity. 
 These are the lemmas to be used:*)
 About ex_bound.
 About linear0.
@@ -190,5 +190,5 @@ rewrite /prop_for /continuous_at linear0 /bounded_near => f0.
 near=> M; apply/nbhs0P.
  near do rewrite /= linearD (le_trans (ler_normD _ _))// -lerBrDl.
 apply: cvgr0_norm_le; rewrite // subr_gt0.
-by []. (* This is were it happens*)
+by []. (* This is where it happens*)
 Unshelve. all: by end_near. Qed.

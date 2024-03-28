@@ -113,17 +113,25 @@ Print hausdorff_space.
  (* Now supposed the diagonal is closed. Then if y is in every neighborhood that
  contains x, then (y,x) is in the closure of the diagonal, and thus y=x*)
  
- (* More formally, the diagonal is  [set (x, x) | x in [set: T]]. 
-Neigborhoods in the products are exactly product of neighborhoods.*)
+ (* More formally, the diagonal is  [set (x, x) | x in [set: T]]. *)
+
+ (*[set x : T | P] == set of points x : T such that P holds.
+ T can be made implicit : [set x | P] *)
+
+ (* Neigborhoods in the products are exactly product of neighborhoods.*)
 Print closed.
 Print closure.
 
 (* A set C is closed if it contains its closure, that is if its contains all the
 points p such that all neighborhood of p intersects C .*)
 
+(*Due to the too recent port of mathcomp-analysis to Hierarchy Builder, some
+types might not appear as they should. If your object appears with an ugly type
+in your context (after doing "move=>  A"), please do "move=> /= A" instead*)
+
 Lemma closed_diag_hausdorff (T : topologicalType) : closed [set (x, x) | x in [set: T]] <-> hausdorff_space T. 
 Proof. 
-split. 
+split.
 Admitted.
 
 (* Continuity uses the limits --> notation, wich is just about filter inclusion.
